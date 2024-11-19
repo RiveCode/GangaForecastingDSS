@@ -11,7 +11,11 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 app = Flask(__name__)
 
 # Load the trained model
+<<<<<<< Updated upstream
 model = joblib.load(r'model\decision_tree_model.pkl')
+=======
+model = joblib.load(r'C:\xampp2\htdocs\GangaForecastingDSS\model\decision_tree_model.pkl')
+>>>>>>> Stashed changes
 
 # Label Encoder and StandardScaler used during training
 scaler = StandardScaler()
