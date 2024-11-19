@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Quality Prediction</title>
+</head>
+<body>
+    <h1>Enter Water Quality Parameters</h1>
+    <form method="POST" action="/predict">
+        <label for="pH">pH:</label>
+        <input type="text" name="pH" required><br><br>
+
+        <label for="Nitrate">Nitrate:</label>
+        <input type="text" name="Nitrate" required><br><br>
+
+        <label for="Color">Color:</label>
+        <input type="text" name="Color" required><br><br>
+
+        <label for="Turbidity">Turbidity:</label>
+        <input type="text" name="Turbidity" required><br><br>
+
+        <label for="Odor">Odor:</label>
+        <input type="text" name="Odor" required><br><br>
+
+        <label for="Chlorine">Chlorine:</label>
+        <input type="text" name="Chlorine" required><br><br>
+
+        <label for="Total_Dissolved_Solids">Total Dissolved Solids:</label>
+        <input type="text" name="Total_Dissolved_Solids" required><br><br>
+
+        <label for="Water_Temperature">Water Temperature:</label>
+        <input type="text" name="Water_Temperature" required><br><br>
+
+        <input type="submit" value="Predict">
+    </form>
+</body>
+</html>
