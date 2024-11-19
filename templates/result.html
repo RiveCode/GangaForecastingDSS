@@ -6,8 +6,11 @@
     <title>Prediction Result</title>
 </head>
 <body>
-    <h1>Water Quality Prediction Result</h1>
-    <p>The water quality is: {{ prediction }}</p>
-    <a href="/">Go Back</a>
+    <h1>Prediction Result: {{ prediction }}</h1>
+    
+    <!-- Display the graph -->
+    <h2>Water Quality Parameters</h2>
+    <img src="data:image/png;base64,{{ img_data }}" alt="Water Quality Parameters Plot">
+
 </body>
 </html>
