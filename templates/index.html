@@ -4,35 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Water Quality Prediction</title>
+    <style>
+        /* General Reset */
+        * {
+            padding: 0;
+            margin: 0;
+            color: #1a1f36;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Ubuntu, sans-serif;
+        }
+        body {
+            min-height: 100%;
+            background: linear-gradient(270deg, rgba(106, 17, 203, 0.8), rgba(37, 117, 252, 0.8));
+            background-size: 400% 400%;
+            animation: gradientBackground 10s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            letter-spacing: -1px;
+            text-align: center;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+        .formbg {
+            background: white;
+            border-radius: 8px;
+            box-shadow: rgba(60, 66, 87, 0.12) 0px 7px 14px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px;
+            padding: 48px;
+            width: 100%;
+            max-width: 700px;
+        }
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="submit"] {
+            font-size: 16px;
+            line-height: 28px;
+            padding: 8px 16px;
+            width: 100%;
+            min-height: 44px;
+            border-radius: 4px;
+            border: 1px solid #e3e8ee;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            background-color: #ffffff;
+            outline-color: rgba(84, 105, 212, 0.5);
+            box-shadow: rgba(60, 66, 87, 0.16) 0px 0px 0px 1px;
+        }
+        input[type="submit"] {
+            background-color: rgb(84, 105, 212);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: rgb(66, 88, 184);
+        }
+
+        /* Gradient Animation */
+        @keyframes gradientBackground {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Enter Water Quality Parameters</h1>
-    <form method="POST" action="/predict">
-        <label for="pH">pH:</label>
-        <input type="text" name="pH" required><br><br>
+    <div class="formbg">
+        <h1>Water Quality Prediction</h1>
+        <form method="POST" action="/predict">
+            <label for="pH">pH:</label>
+            <input type="text" id="pH" name="pH" required>
 
-        <label for="Nitrate">Nitrate:</label>
-        <input type="text" name="Nitrate" required><br><br>
+            <label for="Nitrate">Nitrate:</label>
+            <input type="text" id="Nitrate" name="Nitrate" required>
 
-        <label for="Color">Color:</label>
-        <input type="text" name="Color" required><br><br>
+            <label for="Color">Color:</label>
+            <input type="text" id="Color" name="Color" required>
 
-        <label for="Turbidity">Turbidity:</label>
-        <input type="text" name="Turbidity" required><br><br>
+            <label for="Turbidity">Turbidity:</label>
+            <input type="text" id="Turbidity" name="Turbidity" required>
 
-        <label for="Odor">Odor:</label>
-        <input type="text" name="Odor" required><br><br>
+            <label for="Odor">Odor:</label>
+            <input type="text" id="Odor" name="Odor" required>
 
-        <label for="Chlorine">Chlorine:</label>
-        <input type="text" name="Chlorine" required><br><br>
+            <label for="Chlorine">Chlorine:</label>
+            <input type="text" id="Chlorine" name="Chlorine" required>
 
-        <label for="Total_Dissolved_Solids">Total Dissolved Solids:</label>
-        <input type="text" name="Total_Dissolved_Solids" required><br><br>
+            <label for="Total_Dissolved_Solids">Total Dissolved Solids:</label>
+            <input type="text" id="Total_Dissolved_Solids" name="Total_Dissolved_Solids" required>
 
-        <label for="Water_Temperature">Water Temperature:</label>
-        <input type="text" name="Water_Temperature" required><br><br>
+            <label for="Water_Temperature">Water Temperature:</label>
+            <input type="text" id="Water_Temperature" name="Water_Temperature" required>
 
-        <input type="submit" value="Predict">
-    </form>
+            <input type="submit" value="Predict">
+        </form>
+    </div>
 </body>
 </html>

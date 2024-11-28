@@ -6,11 +6,16 @@
     <title>Prediction Result</title>
 </head>
 <body>
-    <h1>Prediction Result: {{ prediction }}</h1>
-    
-    <!-- Display the graph -->
-    <h2>Water Quality Parameters</h2>
-    <img src="data:image/png;base64,{{ img_data }}" alt="Water Quality Parameters Plot">
+    <h1>Water Quality Prediction</h1>
+
+    <h2>Model Predictions:</h2>
+    <ul>
+        <li><strong>Decision Tree Prediction:</strong> {{ dt_prediction }}</li>
+        <li><strong>Random Forest Prediction:</strong> {{ rf_prediction }}</li>
+    </ul>
+
+    <h2>User Input Data Chart</h2>
+<img src="data:image/png;base64,{{ chart }}" alt="Input Data Chart" style="width: 100%; max-width: 800px; height: auto;" />
 
 </body>
 </html>
