@@ -24,6 +24,7 @@ def index():
 def predict():
     if request.method == 'POST':
         try:
+            # Collect input values from the form
             pH = float(request.form['pH'])
             Nitrate = float(request.form['Nitrate'])
             Color = request.form['Color']
@@ -33,17 +34,15 @@ def predict():
             Total_Dissolved_Solids = float(request.form['Total_Dissolved_Solids'])
             Water_Temperature = float(request.form['Water_Temperature'])
 
-            # Encode categorical features
-            color_encoded = le.fit_transform([Color])[0]
-            odor_encoded = le.fit_transform([Odor])[0]
+            
 
             # Create DataFrame for prediction
             input_data = pd.DataFrame({
                 'pH': [pH],
                 'Nitrate': [Nitrate],
-                'Color': [color_encoded],
+                'Color': [Color],
                 'Turbidity': [Turbidity],
-                'Odor': [odor_encoded],
+                'Odor': [Odor],
                 'Chlorine': [Chlorine],
                 'Total Dissolved Solids': [Total_Dissolved_Solids],
                 'Water Temperature': [Water_Temperature]
@@ -57,27 +56,51 @@ def predict():
             dt_result = 'Safe' if dt_prediction[0] == 1 else 'Unsafe'
             rf_result = 'Safe' if rf_prediction[0] == 1 else 'Unsafe'
 
-            # Generate a chart
-            fig, ax = plt.subplots(figsize=(10, 5))
-            input_data.T.plot(kind='bar', ax=ax, legend=False)
-            ax.set_title('User Input Data')
-            ax.set_ylabel('Value')
-            ax.set_xlabel('Feature')
-            ax.grid(axis='y', linestyle='--', alpha=0.7)
-            ax.set_xticklabels(ax.get_xticklabels(), rotation=10, ha='right')
+            # Generate charts for each feature and comparison
+            charts = {}
+            features = input_data.columns
+            expected_values = {
+                'pH': 7.0,  # Example expected value
+                'Nitrate': 10.0,  # Example expected threshold
+                'Turbidity': 5.0,  # Example expected threshold
+                'Chlorine': 1.0,  # Example expected threshold
+                'Total Dissolved Solids': 500,  # Example expected threshold
+                'Water Temperature': 25.0  # Example expected threshold
+            }
 
-            img = io.BytesIO()
-            fig.savefig(img, format='png')
-            img.seek(0)
-            img_base64 = base64.b64encode(img.getvalue()).decode('utf8')
+            # Generate comparison charts
+            for feature in features:
+                fig, ax = plt.subplots(figsize=(4, 2))
+                user_value = input_data[feature].iloc[0]
+                expected_value = expected_values.get(feature, None)
 
-            return render_template('result.html', 
-                                   dt_prediction=dt_result, 
-                                   rf_prediction=rf_result, 
-                                   chart=img_base64)
+                if expected_value is not None:
+                    ax.bar([f"User Input ({feature})", f"Expected"], 
+                           [user_value, expected_value], color=['blue', 'green'])
+                else:
+                    ax.bar(['User Input'], [user_value], color='blue')
+
+                ax.set_title(f"Comparison for {feature}")
+                ax.set_ylabel('Value')
+                ax.grid(axis='y', linestyle='--', alpha=0.7)
+
+                # Save the chart as a base64-encoded string
+                img = io.BytesIO()
+                fig.savefig(img, format='png', bbox_inches='tight')
+                img.seek(0)
+                charts[feature] = base64.b64encode(img.getvalue()).decode('utf8')
+
+            # Return results and charts to the result page
+            return render_template(
+                'result.html',
+                dt_prediction=dt_result,
+                rf_prediction=rf_result,
+                charts=charts,
+                color=Color,  # Display original values for Color and Odor
+                odor=Odor
+            )
         except Exception as e:
             return f"Error: {str(e)}", 400
-
 @app.route('/api/predict', methods=['POST'])
 def api_predict():
     try:
@@ -94,17 +117,14 @@ def api_predict():
         Total_Dissolved_Solids = float(data['Total_Dissolved_Solids'])
         Water_Temperature = float(data['Water_Temperature'])
 
-        # Encode categorical features
-        color_encoded = le.fit_transform([Color])[0]
-        odor_encoded = le.fit_transform([Odor])[0]
 
         # Create DataFrame
         input_data = pd.DataFrame({
             'pH': [pH],
             'Nitrate': [Nitrate],
-            'Color': [color_encoded],
+            'Color': [Color],
             'Turbidity': [Turbidity],
-            'Odor': [odor_encoded],
+            'Odor': [Odor],
             'Chlorine': [Chlorine],
             'Total Dissolved Solids': [Total_Dissolved_Solids],
             'Water Temperature': [Water_Temperature]
@@ -129,4 +149,3 @@ def api_predict():
 # Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-
