@@ -1,3 +1,8 @@
 model/ann.pkl
 model/decision_tree_model.pkl
 model/rf.pkl
+model/linear_reg.pkl
+model/logistic.pkl
+model/knn.pkl
+model/naive_bayes.pkl
+model/rnn.pkl
