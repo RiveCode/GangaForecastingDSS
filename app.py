@@ -10,9 +10,15 @@ from flask_cors import CORS  # Add CORS support
 app = Flask(__name__)
 CORS(app)  # Enable CORS to allow requests from external clients (e.g., Power BI)
 
-# Load the trained model and scaler
+# Load the trained models and scaler
 rf_model = joblib.load(r'model\rf.pkl')
 dt_model = joblib.load(r'model\decision_tree_model.pkl')
+ann_model = joblib.load(r'model\ann.pkl')
+knn_model = joblib.load(r'model\knn.pkl')
+linear_reg_model = joblib.load(r'model\linear_reg.pkl')
+logistic_model = joblib.load(r'model\logistic.pkl')
+
+
 le = LabelEncoder()
 
 # Route for the home page
@@ -34,8 +40,6 @@ def predict():
             Total_Dissolved_Solids = float(request.form['Total_Dissolved_Solids'])
             Water_Temperature = float(request.form['Water_Temperature'])
 
-            
-
             # Create DataFrame for prediction
             input_data = pd.DataFrame({
                 'pH': [pH],
@@ -49,12 +53,19 @@ def predict():
             })
 
             # Make predictions
-            dt_prediction = dt_model.predict(input_data)
-            rf_prediction = rf_model.predict(input_data)
+            predictions = {
+                "Decision Tree": dt_model.predict(input_data)[0],
+                "Random Forest": rf_model.predict(input_data)[0],
+                "ANN": ann_model.predict(input_data)[0],
+                "KNN": knn_model.predict(input_data)[0],
+                "Linear Regression": linear_reg_model.predict(input_data)[0],
+                "Logistic Regression": logistic_model.predict(input_data)[0],
+                
+                
+            }
 
             # Interpret results
-            dt_result = 'Safe' if dt_prediction[0] == 1 else 'Unsafe'
-            rf_result = 'Safe' if rf_prediction[0] == 1 else 'Unsafe'
+            results = {model: 'Safe' if pred == 1 else 'Unsafe' for model, pred in predictions.items()}
 
             # Generate charts for each feature and comparison
             charts = {}
@@ -93,14 +104,14 @@ def predict():
             # Return results and charts to the result page
             return render_template(
                 'result.html',
-                dt_prediction=dt_result,
-                rf_prediction=rf_result,
+                results=results,
                 charts=charts,
                 color=Color,  # Display original values for Color and Odor
                 odor=Odor
             )
         except Exception as e:
             return f"Error: {str(e)}", 400
+
 @app.route('/api/predict', methods=['POST'])
 def api_predict():
     try:
@@ -117,7 +128,6 @@ def api_predict():
         Total_Dissolved_Solids = float(data['Total_Dissolved_Solids'])
         Water_Temperature = float(data['Water_Temperature'])
 
-
         # Create DataFrame
         input_data = pd.DataFrame({
             'pH': [pH],
@@ -131,18 +141,22 @@ def api_predict():
         })
 
         # Predict with models
-        dt_prediction = dt_model.predict(input_data)
-        rf_prediction = rf_model.predict(input_data)
+        predictions = {
+            "Decision Tree": dt_model.predict(input_data)[0],
+            "Random Forest": rf_model.predict(input_data)[0],
+            "ANN": ann_model.predict(input_data)[0],
+            "KNN": knn_model.predict(input_data)[0],
+            "Linear Regression": linear_reg_model.predict(input_data)[0],
+            "Logistic Regression": logistic_model.predict(input_data)[0],
+            "Naive Bayes": naive_bayes_model.predict(input_data)[0],
+            "RNN": rnn_model.predict(input_data)[0]
+        }
 
         # Format results
-        dt_result = 'Safe' if dt_prediction[0] == 1 else 'Unsafe'
-        rf_result = 'Safe' if rf_prediction[0] == 1 else 'Unsafe'
+        results = {model: 'Safe' if pred == 1 else 'Unsafe' for model, pred in predictions.items()}
 
         # Return JSON response
-        return jsonify({
-            "decision_tree_result": dt_result,
-            "random_forest_result": rf_result
-        })
+        return jsonify(results)
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
